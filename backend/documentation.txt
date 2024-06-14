@@ -1,0 +1,33 @@
+Documentation
+Setup:
+
+Clone the repository/Extract the file.
+Run npm install to install dependencies.
+Create a .env file with the PORT and MONGO_URI variables.
+i am including .env of my to test you quickly using my database url
+Start the server with node app.js
+Endpoints:
+
+User Endpoints:
+
+GET /api/users: Get all users.
+POST /api/users/user: Create a new user.
+GET /api/users/user/:userId: Get a user by ID.
+PUT /api/users/user/:userId: Update a user by ID.
+DELETE /api/users/user/:userId: Delete a user by ID.
+Note:In user name,email and password are mandatory fields if it is not provided will give error message in the reponse
+
+Product Endpoints:
+GET /api/products: Get all products.
+POST /api/products/product: Create a new product.
+GET /api/products/product/:productId: Get a product by ID.
+PUT /api/products/product/:productId: Update a product by ID.
+DELETE /api/products/product/:productId: Delete a product by ID.
+
+Note:In product name and price is mandatory fields but image and description are optional
+
+This setup provides validation middleware for product details, ensuring that the name exists and is greater than one character, the price exists and is a positive number, and optionally, the description is a string. If any validation fails, the middleware will return a 400 Bad Request response with detailed error messages.
+
+
+
+github Repo : https://github.com/pratikrana1612/seawind-task
