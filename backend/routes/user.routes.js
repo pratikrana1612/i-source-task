@@ -17,6 +17,6 @@ router.post("/user", upload.single("image"), validateUser, registerUser);
 router
   .route("/user/:userId")
   .get(getUser)
-  .put(upload.single("image"), validateUser, updateUser)
+  .put(upload.single("image"), updateUser)
   .delete(deleteUser);
 module.exports = router;
