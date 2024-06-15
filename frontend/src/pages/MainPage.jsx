@@ -16,9 +16,21 @@ const headings = [
   "Contact",
   "Actions",
 ];
+// MainPage component is the main page of the application. It renders a table
+// of users and allows to add new users. It uses the useSubmit and useLoaderData
+// hooks from react-router-dom to handle form submission and data loading.
 export default function MainPage() {
+  // useSubmit hook is used to submit form data to the server. It returns a
+  // function that can be called with the form data and additional options.
   const submit = useSubmit();
+
+  // useLoaderData hook is used to load data from the server. It returns the
+  // data loaded from the server.
   const users = useLoaderData();
+
+  // startDeleteHandler is a function that is called when the delete button in
+  // the user row is clicked. It prompts the user for confirmation and if
+  // confirmed, submits a delete request to the server.
   function startDeleteHandler(event, id) {
     event.preventDefault();
     const proceed = window.confirm("Are you sure?");
@@ -34,8 +46,11 @@ export default function MainPage() {
       );
     }
   }
+
   return (
     <>
+      {/* Link component is used to create a link to another page. In this case,
+          it creates a link to the add-user page. */}
       <div className="w-screen flex justify-center items-center my-4">
         <Link to="/add-user">
           <button
@@ -46,11 +61,16 @@ export default function MainPage() {
           </button>
         </Link>
       </div>
+
+      {/* The main table of users is rendered here. If there are users, a table
+          is rendered with the users data. If there are no users, a message is
+          displayed. */}
       <div className="w-screen flex justify-center items-center px-5">
         <div className="font-[sans-serif] overflow-x-auto w-screen">
           <table className="min-w-full bg-white">
             <thead className="bg-gray-800 whitespace-nowrap">
               <tr>
+                {/* The headings of the table are rendered here. */}
                 {headings.map((heading) => (
                   <th
                     key={heading}
@@ -62,6 +82,9 @@ export default function MainPage() {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
+              {/* If there are users, a UserRow component is rendered for each
+                  user. The UserRow component receives the user data and the
+                  startDeleteHandler function as props. */}
               {users.length > 0 &&
                 users.map((user) => (
                   <UserRow
@@ -72,6 +95,7 @@ export default function MainPage() {
                 ))}
             </tbody>
           </table>
+          {/* If there are no users, a message is displayed. */}
           {users.length <= 0 && (
             <p className="p-4 text-lg text-black font-bold text-center">
               No users found
@@ -82,12 +106,18 @@ export default function MainPage() {
     </>
   );
 }
+
+// loader function is used to load data from the server. It returns the data
+// loaded from the server.
 export async function loader() {
   return fetchData("http://localhost:8081/api/users");
 }
+
+// action function is used to handle form submission. It receives the request
+// object and extracts the form data from it. It then submits a delete request
+// to the server and redirects to the main page if the request is successful.
 export async function action({ request }) {
   const data = await request.json();
-  // console.log(params.studentId);
   const response = await fetch(
     "http://localhost:8081/api/users/user/" + data._id,
     {
@@ -104,5 +134,4 @@ export async function action({ request }) {
     );
   }
   return redirect("/");
-  // return redirect("/students");
 }

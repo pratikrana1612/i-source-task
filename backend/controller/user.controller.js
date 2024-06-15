@@ -71,6 +71,7 @@ const updateUser = async (req, res) => {
         new: true,
       }
     ).select("-password");
+    //update the password only if the password is entered by the user
     if (password) {
       user.password = password;
       user.save();
