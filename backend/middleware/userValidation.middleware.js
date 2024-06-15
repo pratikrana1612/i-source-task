@@ -1,5 +1,5 @@
 const { check, validationResult } = require("express-validator");
-const User = require("../models/user.model"); // Assuming you have a User model for database queries
+const User = require("../models/user.model");
 
 const validateUser = [
   check("name")
@@ -13,9 +13,10 @@ const validateUser = [
     .withMessage("Email is required")
     .isEmail()
     .withMessage("Email is not valid")
-    .custom(async (email) => {
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
+    .custom(async (email, { req }) => {
+      const userId = req.params.userId;
+      let existingUser = await User.findOne({ email });
+      if (existingUser && existingUser._id.toString() !== userId.toString()) {
         throw new Error("Email already in use");
       }
     }),
@@ -25,16 +26,16 @@ const validateUser = [
     .withMessage("Username is required")
     .isLength({ min: 2 })
     .withMessage("Username must be greater than one character")
-    .custom(async (username) => {
+    .custom(async (username, { req }) => {
+      const userId = req.params.userId;
       const existingUser = await User.findOne({ username });
-      if (existingUser) {
+      if (existingUser && existingUser._id.toString() !== userId.toString()) {
         throw new Error("Username already in use");
       }
     }),
 
   check("password")
-    .exists({ checkFalsy: true })
-    .withMessage("Password is required")
+    .optional()
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
 

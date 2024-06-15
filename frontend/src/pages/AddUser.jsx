@@ -1,24 +1,16 @@
 import { Form, redirect, useActionData } from "react-router-dom";
 import UserForm from "../components/UserForm";
 import ErrorMessage from "../components/small/ErrorMesssage";
-import { useEffect, useState } from "react";
+function getRandomDecimal() {
+  return Math.random();
+}
 export default function AddUser() {
   let actionData = useActionData();
-  const [showError, setShowError] = useState(false);
-  useEffect(() => {
-    if (actionData && actionData.errors.length > 0) {
-      setShowError(true);
-    }
-  }, [actionData]);
-  const handleCloseError = () => {
-    setShowError(false);
-  };
-
   return (
     <>
       <h1 className="text-3xl font-[sans-serif] text-center my-4">Add User</h1>
-      {showError && actionData && actionData.errors.length > 0 && (
-        <ErrorMessage onClose={handleCloseError}>
+      {actionData && actionData.errors.length > 0 && (
+        <ErrorMessage key={getRandomDecimal()}>
           {actionData.errors[0].msg}
         </ErrorMessage>
       )}
@@ -34,6 +26,10 @@ export default function AddUser() {
 }
 export async function action({ request }) {
   const formData = await request.formData();
+  if (formData.get("password") !== formData.get("re-password")) {
+    return { errors: [{ msg: "Two Password are not same" }] };
+  }
+
   //   let user = Object.fromEntries(formData);
 
   const response = await fetch("http://localhost:8081/api/users/user", {

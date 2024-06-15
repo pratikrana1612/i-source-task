@@ -85,7 +85,7 @@ export default function MainPage() {
 export async function loader() {
   return fetchData("http://localhost:8081/api/users");
 }
-export async function action({ request, params }) {
+export async function action({ request }) {
   const data = await request.json();
   // console.log(params.studentId);
   const response = await fetch(

@@ -62,6 +62,8 @@ const updateUser = async (req, res) => {
     if (req.file?.path) {
       req.body.profiePic = req.file?.path;
     }
+    const password = req.body?.password;
+    delete req.body.password;
     const user = await User.findByIdAndUpdate(
       req.params.userId || "",
       req.body,
@@ -69,6 +71,10 @@ const updateUser = async (req, res) => {
         new: true,
       }
     ).select("-password");
+    if (password) {
+      user.password = password;
+      user.save();
+    }
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
