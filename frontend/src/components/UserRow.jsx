@@ -7,7 +7,7 @@ export default function UserRow({
   username,
   contact,
   profiePic,
-  startDeleteHandler,
+  openModel,
 }) {
   return (
     <tr className="even:bg-blue-50">
@@ -44,11 +44,7 @@ export default function UserRow({
             </svg>
           </button>
         </Link>
-        <button
-          className="mr-4"
-          title="Delete"
-          onClick={(event) => startDeleteHandler(event, _id)}
-        >
+        <button className="mr-4" title="Delete" onClick={() => openModel(_id)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-5 fill-red-500 hover:fill-red-700"

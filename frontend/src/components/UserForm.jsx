@@ -66,7 +66,7 @@ export default function UserForm({ user }) {
         type="submit"
         className="!mt-8 px-6 py-2.5 text-sm bg-[#333] hover:bg-[#222] text-white rounded-sm"
       >
-        Submit
+        {user ? "Update" : "Save"}
       </button>
       <button
         type="reset"

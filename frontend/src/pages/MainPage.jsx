@@ -7,6 +7,8 @@ import {
   useLoaderData,
   useSubmit,
 } from "react-router-dom";
+import DeleteModel from "../components/DeleteModel";
+import { useState } from "react";
 
 const headings = [
   "Profile Pic",
@@ -20,6 +22,7 @@ const headings = [
 // of users and allows to add new users. It uses the useSubmit and useLoaderData
 // hooks from react-router-dom to handle form submission and data loading.
 export default function MainPage() {
+  const [isOpen, changeOpen] = useState({ open: false, id: null });
   // useSubmit hook is used to submit form data to the server. It returns a
   // function that can be called with the form data and additional options.
   const submit = useSubmit();
@@ -31,20 +34,21 @@ export default function MainPage() {
   // startDeleteHandler is a function that is called when the delete button in
   // the user row is clicked. It prompts the user for confirmation and if
   // confirmed, submits a delete request to the server.
-  function startDeleteHandler(event, id) {
-    event.preventDefault();
-    const proceed = window.confirm("Are you sure?");
-    console.log(id);
-
-    if (proceed) {
-      submit(
-        { _id: id },
-        {
-          method: "delete",
-          encType: "application/json",
-        }
-      );
-    }
+  function closeModel() {
+    changeOpen({ open: false, id: null });
+  }
+  function openModel(id) {
+    changeOpen({ open: true, id: id });
+  }
+  function startDeleteHandler() {
+    submit(
+      { _id: isOpen.id },
+      {
+        method: "delete",
+        encType: "application/json",
+      }
+    );
+    closeModel();
   }
 
   return (
@@ -61,7 +65,12 @@ export default function MainPage() {
           </button>
         </Link>
       </div>
-
+      {isOpen.open && (
+        <DeleteModel
+          closeModel={closeModel}
+          startDeleteHandler={startDeleteHandler}
+        ></DeleteModel>
+      )}
       {/* The main table of users is rendered here. If there are users, a table
           is rendered with the users data. If there are no users, a message is
           displayed. */}
@@ -90,6 +99,7 @@ export default function MainPage() {
                   <UserRow
                     key={user._id}
                     {...user}
+                    openModel={openModel}
                     startDeleteHandler={startDeleteHandler}
                   />
                 ))}
